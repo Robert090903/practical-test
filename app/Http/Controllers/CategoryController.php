@@ -33,12 +33,30 @@ class CategoryController extends Controller
 
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255|unique:categories,name,'.$id,
-            'description' => 'nullable|string'
+            'description' => 'sometimes|nullable|string'
         ]);
 
-        $category->update($validated);
+        if (empty($validated)) {
+            $randomNames = ['Electronics', 'Fashion', 'Books', 'Sports', 'Home', 'Food', 'Beauty', 'Toys', 'Garden', 'Automotive'];
+            $randomDesc = ['Featured Items', 'Best Sellers', 'Top Collection', 'Premium Selection', 'Exclusive Items', 'Special Collection', 'Trending Items'];
+            
+            $validated = [
+                'name' => $randomNames[array_rand($randomNames)],
+                'description' => $randomDesc[array_rand($randomDesc)]
+            ];
+        }
 
-        return $category;
+        $oldData = $category->toArray();
+        $category->forceFill($validated);
+        $category->save();
+        $category->refresh();
+
+        return response()->json([
+            'message' => 'Category updated successfully',
+            'old_data' => $oldData,
+            'new_data' => $category,
+            'changes_made' => $validated
+        ], 200);
     }
 
     public function destroy($id)
