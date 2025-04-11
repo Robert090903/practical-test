@@ -15,7 +15,8 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:categories'
+            'name' => 'required|string|max:255|unique:categories',
+            'description' => 'nullable|string'
         ]);
 
         return Category::create($validated);
@@ -31,7 +32,8 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
 
         $validated = $request->validate([
-            'name' => 'sometimes|string|max:255|unique:categories,name,'.$id
+            'name' => 'sometimes|string|max:255|unique:categories,name,'.$id,
+            'description' => 'nullable|string'
         ]);
 
         $category->update($validated);
@@ -44,6 +46,6 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
         $category->delete();
 
-        return response()->noContent();
+        return response()->json(['message' => 'Category deleted successfully'], 200);
     }
 }

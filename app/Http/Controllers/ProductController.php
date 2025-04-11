@@ -16,8 +16,9 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'quantity' => 'required|integer',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'quantity' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id'
         ]);
 
@@ -35,8 +36,9 @@ class ProductController extends Controller
 
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
-            'price' => 'sometimes|numeric',
-            'quantity' => 'sometimes|integer',
+            'description' => 'nullable|string',
+            'price' => 'sometimes|numeric|min:0',
+            'quantity' => 'sometimes|integer|min:0',
             'category_id' => 'sometimes|exists:categories,id'
         ]);
 
@@ -50,6 +52,6 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->delete();
 
-        return response()->noContent();
+        return response()->json(['message' => 'Product deleted successfully'], 200);
     }
 }
