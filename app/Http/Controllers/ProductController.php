@@ -22,7 +22,9 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id'
         ]);
 
-        return Product::create($validated);
+        $product = Product::create($validated);
+
+        return response()->json($product, 200);
     }
 
     public function show($id)
