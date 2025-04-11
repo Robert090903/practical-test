@@ -14,17 +14,25 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'quantity' => 'required|integer|min:0',
-            'category_id' => 'required|exists:categories,id'
-        ]);
+        $categoryIds = \App\Models\Category::pluck('id')->toArray();
+        
+        $randomProducts = ['MacBook Pro', 'iPhone Pro Max', 'iPad Air', 'Apple Watch', 'Sony Camera', 'Bose Headphones', 'Samsung TV', 'Gaming Console', 'Wireless Earbuds', 'Smart Speaker'];
+        $randomDesc = ['Latest Generation', 'Premium Edition', 'Professional Series', 'Limited Collection', 'Signature Series', 'Elite Model', 'Advanced Version', 'Ultimate Package'];
+        
+        $validated = [
+            'name' => $randomProducts[array_rand($randomProducts)],
+            'description' => $randomDesc[array_rand($randomDesc)],
+            'price' => rand(100, 1000) + (rand(0, 99) / 100),
+            'quantity' => rand(1, 50),
+            'category_id' => $categoryIds[array_rand($categoryIds)]
+        ];
 
         $product = Product::create($validated);
 
-        return response()->json($product, 200);
+        return response()->json([
+            'message' => 'Product created successfully',
+            'data' => $product
+        ], 200);
     }
 
     public function show($id)

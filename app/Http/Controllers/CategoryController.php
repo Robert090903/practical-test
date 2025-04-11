@@ -14,12 +14,20 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:categories',
-            'description' => 'nullable|string'
-        ]);
+        $randomNames = ['Electronics', 'Fashion', 'Books', 'Sports', 'Home', 'Food', 'Beauty', 'Toys', 'Garden', 'Automotive'];
+        $randomDesc = ['Featured Items', 'Best Sellers', 'Top Collection', 'Premium Selection', 'Exclusive Items', 'Special Collection', 'Trending Items'];
+        
+        $validated = [
+            'name' => $randomNames[array_rand($randomNames)],
+            'description' => $randomDesc[array_rand($randomDesc)]
+        ];
 
-        return Category::create($validated);
+        $category = Category::create($validated);
+
+        return response()->json([
+            'message' => 'Category created successfully',
+            'data' => $category
+        ], 200);
     }
 
     public function show($id)
