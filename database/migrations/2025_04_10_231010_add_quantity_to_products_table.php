@@ -1,13 +1,22 @@
-public function up(): void
-{
-    Schema::table('products', function (Blueprint $table) {
-        $table->integer('quantity')->default(0);
-    });
-}
+<?php
 
-public function down(): void
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
 {
-    Schema::table('products', function (Blueprint $table) {
-        $table->dropColumn('quantity');
-    });
-}
+    public function up(): void
+    {
+        Schema::table('products', function (Blueprint $table) {
+            $table->integer('quantity')->default(0);
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropColumn('quantity');
+        });
+    }
+};
